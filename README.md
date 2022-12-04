@@ -1,7 +1,3 @@
-# ⚠️ Work in progress ⚠️
-
-See [#1](https://github.com/gr2m/github-app-webhook-relay/pull/1)
-
 # `github-app-webhook-relay`
 
 > **Warning**  
