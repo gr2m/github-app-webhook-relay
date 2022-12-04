@@ -39,6 +39,7 @@ export default async function start(state) {
       });
     }
 
+    // @ts-ignore AggregateError is fine for Node 16+
     throw new AggregateError([error], "Could not retrieve app info");
   }
   try {
@@ -63,6 +64,7 @@ export default async function start(state) {
       );
     }
 
+    // @ts-ignore AggregateError is fine for Node 16+
     throw new AggregateError(
       [error],
       `Could not retrieve ${appSlug}'s installation for ${state.owner}/${state.repo}`

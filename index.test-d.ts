@@ -23,7 +23,7 @@ export function readmeExample() {
     expectType<string>(id);
     expectType<string>(name);
     expectType<string>(body);
-    expectType<string | undefined>(signature);
+    expectType<string>(signature);
     expectType<Record<string, string>>(headers);
   });
 
