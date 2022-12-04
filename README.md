@@ -11,6 +11,8 @@
 
 The `createHookToken` option needs to be set to a [token with the `admin:repo_hook` scope](https://github.com/settings/tokens/new?scopes=admin:repo_hook&description=github-webhook-relay).
 
+Webhooks are injected into the passed `app` instance automatically and can be handled using `app.webhooks.on(eventName, handler)`
+
 ```js
 import { App } from "octokit";
 import AppWebhookRelay from "github-app-webhook-relay";
@@ -44,8 +46,6 @@ const relay = new AppWebhookRelay({
   createHookToken: process.env.GITHUB_TOKEN,
   app,
 });
-
-relay.on("webhook", app.webhooks.receive);
 
 relay.on("error", (error) => {
   console.log("error: %s", error);
