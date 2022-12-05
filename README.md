@@ -1,9 +1,9 @@
 # `github-app-webhook-relay`
 
+> Receive webhooks from a GitHub repository using websockets amended with an `installation: { id }` key to run GitHub Apps locally.
+>
 > **Warning**  
 > Receiving webhooks via websockets is currently in [private beta](https://github.blog/changelog/2022-11-16-webhook-forwarding-in-the-github-cli-public-beta/)
-
-> Receive webhooks from a GitHub repository using websockets amended with an `installation: { id }` key to run GitHub Apps locally.
 
 `github-app-webhook-relay` is built on top of `github-webhook-relay`. The difference is that `github-app-webhook-relay` will amend every received github webhook request's body with the `installation` key and set it to `{ id }` where `id` is the installation id of the installation ID for the given repository. Without the `installation` key the webhook event payload you cannot test GitHub Apps locally as the installation ID is required to create an installation access token in order to act as the app in a repository. Also `events` are optional and are set to the app's subscribed events by default.
 
@@ -257,6 +257,10 @@ See [how `github-webhooks-relay` works](https://github.com/gr2m/github-webhook-r
 ## Contributing
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## See also
+
+- [`github-webhook-relay-cli`](https://github.com/gr2m/github-webhook-relay/#readme) - The webhook relay this libary is built upon
 
 ## License
 
