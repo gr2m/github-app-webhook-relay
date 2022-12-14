@@ -260,7 +260,7 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## See also
 
-- [`github-webhook-relay-cli`](https://github.com/gr2m/github-webhook-relay/#readme) - The webhook relay this libary is built upon
+- [`github-webhook-relay`](https://github.com/gr2m/github-webhook-relay/#readme) - The webhook relay this libary is built upon
 
 ## License
 
