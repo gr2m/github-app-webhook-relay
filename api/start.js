@@ -6,6 +6,8 @@ import { Octokit } from "@octokit/core";
 
 import VERSION from "../version.js";
 
+import { getInstallationId } from "./get-installation-id.js";
+
 const GitHubWebHookRelayOctokit = Octokit.defaults({
   userAgent: `gr2m/github-webhook-relay/${VERSION}`,
 });
@@ -26,7 +28,6 @@ const GitHubWebHookRelayOctokit = Octokit.defaults({
 export default async function start(state) {
   let appSlug;
   let appEvents;
-  let installationId;
 
   try {
     const { data: appInfo } = await state.app.octokit.request("GET /app");
@@ -42,34 +43,8 @@ export default async function start(state) {
     // @ts-ignore AggregateError is fine for Node 16+
     throw new AggregateError([error], "Could not retrieve app info");
   }
-  try {
-    const { data: installation } = await state.app.octokit.request(
-      "GET /repos/{owner}/{repo}/installation",
-      {
-        owner: state.owner,
-        repo: state.repo,
-      }
-    );
 
-    installationId = installation.id;
-  } catch (error) {
-    if (error.status === 404) {
-      throw Object.assign(
-        new Error(
-          `App ${appSlug} is not installed on ${state.owner}/${state.repo}`
-        ),
-        {
-          name: "GitHubAppWebHookRelayError",
-        }
-      );
-    }
-
-    // @ts-ignore AggregateError is fine for Node 16+
-    throw new AggregateError(
-      [error],
-      `Could not retrieve ${appSlug}'s installation for ${state.owner}/${state.repo}`
-    );
-  }
+  const installationId = await getInstallationId(state, String(appSlug));
 
   const octokit = state.octokit
     ? state.octokit
