@@ -9,7 +9,7 @@
 
 ## Usage
 
-The `createHookToken` option needs to be set to a [token with the `admin:repo_hook` scope](https://github.com/settings/tokens/new?scopes=admin:repo_hook&description=github-webhook-relay).
+The `createHookToken` option needs to be set to a [token with the `admin:repo_hook` and/or `admin:org_hook` scope](https://github.com/settings/tokens/new?scopes=admin:repo_hook,admin:org_hook&description=github-webhook-relay), depending on which you want to create.
 
 Webhooks are injected into the passed `app` instance automatically and can be handled using `app.webhooks.on(eventName, handler)`
 
@@ -98,7 +98,7 @@ const relay = new WebhookRelay(options);
       </td>
       <td>
 
-**Required**. The repository name
+When set, the webhook will be created for the repository. When not set, the webhook will be created for the organization. Note that user-level webhooks are not supported by GitHub, so `options.owner` must be an organization.
 
 </td>
     </tr>

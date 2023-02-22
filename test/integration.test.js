@@ -21,7 +21,12 @@ const TestOctokit = Octokit.plugin((octokit, { t, port }) => {
       };
     }
 
-    if (route === "GET /repos/{owner}/{repo}/installation") {
+    if (
+      [
+        "GET /repos/{owner}/{repo}/installation",
+        "GET /orgs/{org}/installation",
+      ].includes(route)
+    ) {
       return {
         data: {
           id: 1,
@@ -97,6 +102,75 @@ test("README example", async (t) => {
     const relay = new WebhookRelay({
       owner: "gr2m",
       repo: "github-webhooks-relay",
+      octokit,
+      app,
+    });
+
+    wss.on("error", reject);
+    relay.on("error", reject);
+
+    let startReceived;
+    let appWebhookReceived;
+    let relayWebhookReceived;
+    app.webhooks.on("issues.opened", (event) => {
+      appWebhookReceived = true;
+      t.snapshot(event.payload, "app webhook payload for issues.opened");
+    });
+
+    relay.on("start", () => (startReceived = true));
+    relay.on("webhook", (event) => {
+      relayWebhookReceived = true;
+      t.snapshot(event, "relay webhook");
+    });
+    relay.on("stop", () => {
+      t.true(startReceived, "start event received");
+      t.true(appWebhookReceived, "app webhook received");
+      t.true(relayWebhookReceived, "relay webhook received");
+
+      resolve();
+    });
+
+    wss.on("listening", async () => {
+      relay.start();
+    });
+  });
+});
+
+test("organization reelay", async (t) => {
+  return new Promise(async (resolve, reject) => {
+    const port = await getPort();
+    const octokit = new TestOctokit({ t, port });
+
+    const wss = new WebSocketServer({ port });
+
+    wss.on("connection", function connection(ws) {
+      ws.on("message", (data) => {
+        t.snapshot(data.toString(), "response");
+
+        ws.close();
+        wss.close();
+      });
+
+      ws.send(JSON.stringify(issuesOpenEvent));
+    });
+
+    octokit.hook.wrap("request", (request, options) => {
+      const route = `${options.method} ${options.url}`;
+      options.headers["user-agent"] = "test";
+      t.snapshot(options, route);
+
+      return {
+        data: {
+          ws_url: `ws://localhost:${port}`,
+          id: 1,
+        },
+      };
+    });
+
+    const app = new TestApp();
+
+    const relay = new WebhookRelay({
+      owner: "gr2m-sandbox",
       octokit,
       app,
     });

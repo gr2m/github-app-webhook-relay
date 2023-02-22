@@ -5,7 +5,7 @@ import { App } from "@octokit/app";
 export namespace GitHubAppWebHookRelay {
   interface Options {
     owner: string;
-    repo: string;
+    repo?: string;
     app: App;
     events?: (keyof EventPayloadMap)[];
   }

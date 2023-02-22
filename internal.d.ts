@@ -13,7 +13,7 @@ export type Options =
 
 export type State = {
   owner: string;
-  repo: string;
+  repo?: string;
   eventEmitter: EventEmitter;
   app: App;
   events?: (keyof EventPayloadMap)[];
