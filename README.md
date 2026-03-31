@@ -156,6 +156,19 @@ Defaults to the app's subscribed events.
 
 </td>
     </tr>
+    <tr>
+      <th>
+        <code>options.filter</code>
+      </th>
+      <td>
+        <code>(event) => boolean</code>
+      </td>
+      <td>
+
+A function to filter out unwanted events. The function is called with an event object {id, name, payload} and must return a truthy value to forward the event to the app, otherwise the event is ignored.
+
+</td>
+    </tr>
   </tbody>
 </table>
 
